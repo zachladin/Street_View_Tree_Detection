@@ -15,13 +15,13 @@ library(reticulate)
 library(raster)
 library(leaflet)
 
-source("/Users/zach/Dropbox (ZachTeam)/Projects/Street_View_Shiny_App/New_Street_View/helpers.R")
+source("./helpers.R")
 ##############################################################################
 #function to capture screenshot and modify image
 
 screenCapture<-function(){
   
-new.img<-load.image(paste("/Users/zach/Dropbox (ZachTeam)/Projects/Street_View_Shiny_App/New_Street_View/TOH_yolo/Downloaded_images", paste("screenshot", "jpg",sep="."),sep="/"))
+new.img<-load.image(paste("./TOH_yolo/Downloaded_images", paste("screenshot", "jpg",sep="."),sep="/"))
   #plot(new.img)
   
   #crop image
@@ -31,7 +31,7 @@ new.img<-load.image(paste("/Users/zach/Dropbox (ZachTeam)/Projects/Street_View_S
   #dim(img.crop)
   
   #save image
-  jpeg(paste("/Users/zach/Dropbox (ZachTeam)/Projects/Street_View_Shiny_App/New_Street_View/TOH_yolo/Downloaded_images",paste("Image_",1,".jpg",sep=""), sep="/"),
+  jpeg(paste("./TOH_yolo/Downloaded_images",paste("Image_",1,".jpg",sep=""), sep="/"),
        width=689,quality=1800, res=1200)
   
   par(mar = rep(0, 4),xpd=NA)
@@ -40,12 +40,12 @@ new.img<-load.image(paste("/Users/zach/Dropbox (ZachTeam)/Projects/Street_View_S
   dev.off()
   
   #read in image as image magick object
-  new.img<-image_read(paste("/Users/zach/Dropbox (ZachTeam)/Projects/Street_View_Shiny_App/New_Street_View/TOH_yolo/Downloaded_images",paste("Image_",1,".jpg",sep=""), sep="/"))
+  new.img<-image_read(paste("./TOH_yolo/Downloaded_images",paste("Image_",1,".jpg",sep=""), sep="/"))
   
   new.img.crop<-image_trim(new.img,fuzz=20)
   
   #write image
-  image_write(new.img.crop, paste("/Users/zach/Dropbox (ZachTeam)/Projects/Street_View_Shiny_App/New_Street_View/TOH_yolo/Downloaded_images",paste("Image_",1,".jpg",sep=""), sep="/"), quality=100,
+  image_write(new.img.crop, paste("./TOH_yolo/Downloaded_images",paste("Image_",1,".jpg",sep=""), sep="/"), quality=100,
               density=1200)
 }
 ################################################################################
@@ -110,7 +110,7 @@ server <- function(input, output, session) {
   if (interactive()) {
     
   #google API key
-  set_key("AIzaSyAPrRGk21jtlX5iTUgrLkfqWerUDInSQYo")
+  set_key("YOUR API KEY")
 
     output$map <- renderGoogle_map({
     # Get latitude and longitude
@@ -163,7 +163,7 @@ server <- function(input, output, session) {
                   })
                 
                    #first delete Image_1_labeled.jpg
-                   img.file.path<-"/Users/zach/Dropbox (ZachTeam)/Projects/Street_View_Shiny_App/New_Street_View/TOH_yolo/Labeled_images"
+                   img.file.path<-"./TOH_yolo/Labeled_images"
                    
                    file.remove(dir(  
                      img.file.path, 
@@ -172,7 +172,7 @@ server <- function(input, output, session) {
                    ))
                    
                    #run screencapture command from terminal
-                   system("screencapture /Users/zach/'Dropbox (ZachTeam)'/Projects/Street_View_Shiny_App/New_Street_View/TOH_yolo/Downloaded_images/screenshot.jpg")
+                   system("screencapture ./TOH_yolo/Downloaded_images/screenshot.jpg")
                    
                    #run screenCapture function to process images
                    screenCapture()
@@ -181,14 +181,14 @@ server <- function(input, output, session) {
                    print(environment(show))
                    use_python("/usr/local/bin/python3", required=TRUE)
                    
-                   source_python("/Users/zach/Dropbox (ZachTeam)/Projects/Street_View_Shiny_App/New_Street_View/TOH_yolo/YOLO_scripts/runYOLO_from_R.py")
+                   source_python("./TOH_yolo/YOLO_scripts/runYOLO_from_R.py")
                    
                    #run YOLO
-                   try(yolo_in_R(myDir="/Users/zach/Dropbox (ZachTeam)/Projects/Street_View_Shiny_App/New_Street_View/TOH_yolo",imageName="Image_1", threshold = myThreshold() ))
+                   try(yolo_in_R(myDir="./TOH_yolo",imageName="Image_1", threshold = myThreshold() ))
                    
                    #Load labeled image
                    tryCatch({
-                            new.img.label<-image_read(paste("/Users/zach/Dropbox (ZachTeam)/Projects/Street_View_Shiny_App/New_Street_View/TOH_yolo/Labeled_images", paste(paste("Image_1","_labeled",sep=""), "jpg",sep="."),sep="/"))
+                            new.img.label<-image_read(paste("./TOH_yolo/Labeled_images", paste(paste("Image_1","_labeled",sep=""), "jpg",sep="."),sep="/"))
                             
                             new.img.label.crop<-image_trim(new.img.label,fuzz=20)
                             

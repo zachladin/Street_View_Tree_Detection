@@ -1,6 +1,4 @@
 # Script for running yolo
-# myDir = '/Users/zach/Dropbox (ZachTeam)/Projects/Street_View_Shiny_App/TOH_yolo'
-# newImage = "Ailanthus.4"
 
 # set working directory
 def yolo_in_R(myDir, imageName, threshold):
